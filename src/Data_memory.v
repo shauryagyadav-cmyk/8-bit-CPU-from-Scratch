@@ -7,7 +7,7 @@ module Data_memory (
     
     output reg [7:0] read_data 
 );
-reg [7:0] memory [7:0];  
+reg [7:0] memory [0:255];  
 
 always @(posedge clk) begin
     if (write_enable)

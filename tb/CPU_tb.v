@@ -29,7 +29,7 @@ $dumpvars(0, CPU_tb.uut);
     #20;
     rst = 0;
 
-    #1500;
+    #5000;
     $display("finished!");
     $finish;
 end
