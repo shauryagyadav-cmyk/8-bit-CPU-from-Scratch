@@ -35,10 +35,6 @@ with open("output.bin", "w") as outfile:
         "R7": "111"
     }
 
-    # ==========================================
-    # PASS 1 : Collect labels
-    # ==========================================
-
     labels = {}
     pc = 0
 
@@ -57,10 +53,6 @@ with open("output.bin", "w") as outfile:
 
     print("Labels:", labels)
 
-    # ==========================================
-    # PASS 2 : Assemble
-    # ==========================================
-
     for line in lines:
 
         instruction = line.split(";")[0].strip()
@@ -68,7 +60,6 @@ with open("output.bin", "w") as outfile:
         if not instruction:
             continue
 
-        # Ignore labels
         if instruction.endswith(":"):
             continue
 
@@ -80,9 +71,7 @@ with open("output.bin", "w") as outfile:
 
         match opcode:
 
-            # ============================
-            # ALU Instructions
-            # ============================
+            
 
             case "0000" | "0001" | "0010" | "0011" | "0100":
 
@@ -92,9 +81,6 @@ with open("output.bin", "w") as outfile:
 
                 binaryinstruction = opcode + rd + rs1 + rs2 + "000"
 
-            # ============================
-            # NOT / LSL / LSR
-            # ============================
 
             case "0101" | "0110" | "0111":
 
@@ -103,9 +89,6 @@ with open("output.bin", "w") as outfile:
 
                 binaryinstruction = opcode + rd + rs1 + "000000"
 
-            # ============================
-            # MVI
-            # ============================
 
             case "1000":
 
@@ -114,9 +97,6 @@ with open("output.bin", "w") as outfile:
 
                 binaryinstruction = opcode + rd + imm + "0"
 
-            # ============================
-            # STR / LDR
-            # ============================
 
             case "1001" | "1010":
 
@@ -125,9 +105,6 @@ with open("output.bin", "w") as outfile:
 
                 binaryinstruction = opcode + rd + mem + "000000"
 
-            # ============================
-            # JMP / BEQ / BNE
-            # ============================
 
             case "1011" | "1101" | "1111":
 
@@ -142,9 +119,6 @@ with open("output.bin", "w") as outfile:
 
                 binaryinstruction = opcode + jump_add + "000000"
 
-            # ============================
-            # CMP
-            # ============================
 
             case "1100":
 
@@ -153,9 +127,6 @@ with open("output.bin", "w") as outfile:
 
                 binaryinstruction = opcode + rs1 + rs2 + "000000"
 
-            # ============================
-            # HLT
-            # ============================
 
             case "1110":
 
