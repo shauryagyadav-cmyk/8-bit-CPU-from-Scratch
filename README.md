@@ -159,6 +159,14 @@ The CPU has been tested for:
 
 ---
 
+## CPU Execution Overview
+
+The waveform below shows the processor executing a complete assembly program. The Program Counter advances through the instruction stream while the control unit cycles through the five execution states (Fetch → Decode → Read → Execute → Writeback). Conditional branches (`BEQ`, `BNE`), unconditional jumps (`JMP`), and the `HLT` instruction can all be observed.
+
+![CPU Execution](docs/execution_overview.png)
+
+---
+
 # Development Timeline
 
 ### Stage 1
