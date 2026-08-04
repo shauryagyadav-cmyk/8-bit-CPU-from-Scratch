@@ -167,6 +167,12 @@ The waveform below shows the processor executing a complete assembly program. Th
 
 ---
 
+## Final Register State
+
+After executing the test program, the register file contains the expected values, confirming correct execution of arithmetic, logic, memory, and branch instructions.
+
+![Final Register State](docs/final_registers.png)
+
 # Development Timeline
 
 ### Stage 1
