@@ -8,6 +8,7 @@ module control_unit(
     output reg pc_enable,
     output reg ir_load,
     output reg reg_write,
+    input CPU_enable,
 
     output reg [3:0] alu_op,
     output reg [2:0] writeback_sel,
@@ -15,13 +16,25 @@ module control_unit(
     output reg data_mem_write,
     output reg jump_enable,
     output reg flag_we,
-    output reg halt
+    output reg halt,
+    output reg instruction_done,
+    output [2:0] debug_state,
+    output [2:0] debug_next_state,
+    output debug_halted
 
 );
 
 reg [2:0] current_state;
 reg [2:0] next_state;
 reg halted;
+
+
+assign debug_state = current_state;
+assign debug_next_state = next_state;
+assign debug_halted = halted;
+
+
+
 
 //=========================
 // State Register
@@ -39,9 +52,16 @@ end
 always @(posedge clk or posedge rst) begin
     if (rst)
         halted <= 1'b0;
-    else if (opcode == 4'b1110)
+    else if (CPU_enable &&
+             current_state == 3'b011 &&
+             opcode == 4'b1110)
         halted <= 1'b1;
 end
+
+
+
+
+
 
 //=========================
 // Control Logic
@@ -58,10 +78,14 @@ always @(*) begin
     data_mem_write  = 0;
     jump_enable     = 0;
     flag_we         = 0;
+    instruction_done = 0;
 
     halt = halted;
 
     next_state = current_state;
+
+
+    if (CPU_enable) begin
 
     // Freeze CPU if halted
     if (halted) begin
@@ -221,10 +245,26 @@ always @(*) begin
         //-------------------------
         3'b100: begin
             next_state = 3'b000;
+
+            if(CPU_enable) begin
+                instruction_done = 1;
+            end
         end
 
         endcase
 
+    end
+
+    end
+
+    if (!CPU_enable) begin
+    pc_enable = 0;
+    reg_write = 0;
+    data_mem_write  = 0;
+    flag_we        = 1'b0;
+    jump_enable    = 1'b0;
+    ir_load = 1'b0;
+        
     end
 
 end

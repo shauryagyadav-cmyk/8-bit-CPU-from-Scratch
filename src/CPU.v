@@ -1,8 +1,35 @@
 module CPU (
 
 input clk,
-input rst
+input rst,
+input CPU_enable,
+output [5:0] debug_pc,
+output [15:0] debug_instruction,
+output debug_JMP,
+output debug_REG_write,
+output debug_MEM_write,
+output [7:0] debug_MEM_address,
+output [7:0] debug_MEM_data,
+output [7:0] debug_ALU_result,
+output [3:0] debug_ALU_opcode,
+output [7:0] debug_R0,
+  output [7:0] debug_R1,
+  output [7:0] debug_R2,
+  output [7:0] debug_R3,
+  output [7:0] debug_R4,
+  output [7:0] debug_R5,
+  output [7:0] debug_R6,
+  output [7:0] debug_R7,
+  output debug_instruction_done,
+  output [2:0] debug_state,
+  output [2:0] debug_next_state,
+  output debug_halted
+
+
 );
+
+
+
 
 wire [5:0] pc_address;
 wire [15:0] instruction;
@@ -39,6 +66,18 @@ wire zero_flag;
 wire halt;
 
 
+assign debug_pc = pc_address;
+assign debug_instruction = instruction_decode;
+assign debug_JMP         = jump_enable;
+assign debug_REG_write   = write_enable;
+assign debug_MEM_write   = write_mem;
+assign debug_MEM_address = mem_address;
+assign debug_MEM_data    = data_reg;
+assign debug_ALU_result  = wire1;
+assign debug_ALU_opcode  = alu_op;
+
+
+
 flag_register flag_reg(
 
     .clk(clk),
@@ -58,6 +97,7 @@ program_counter pc (
     .jump_address(jump_address),
     .jump(jump_enable),
     .halt(halt)
+    
 
 
 );
@@ -65,9 +105,8 @@ program_counter pc (
 instruction_memory instruction_memory0 (
     .address(pc_address),
     .instruction(instruction)
+);
 
-    
-    );
 instruction_register instruction_register0 (
     .clk(clk),
     .instruction(instruction),
@@ -88,7 +127,12 @@ control_unit control_unit0 (
     .jump_enable(jump_enable),
     .flag_we(flag_we),
     .zero_flag(zero_flag),
-    .halt(halt)      
+    .halt(halt),
+    .CPU_enable(CPU_enable),
+    .instruction_done(debug_instruction_done),
+    .debug_state(debug_state),
+    .debug_next_state(debug_next_state),
+    .debug_halted(debug_halted)
 );
 
 writeback_mux mux1(
@@ -143,17 +187,32 @@ Data_memory data_memory0 (
 );
 regfile reg_file (
     .clk(clk),
+    .rst(rst),
+
     .write_address(write_address),
     .read_address0(read_address0),
     .read_address1(read_address1),
+
     .read_data0(alu_a),
     .read_data1(alu_b),
+
     .write_data(write_data),
     .write_enable(write_enable),
+
     .read_address_mem(mem_reg),
     .mem_data(data_reg),
     .memory_address(mem_address),
-    .Rg(Rg)
+
+    .Rg(Rg),
+
+    .debug_R0(debug_R0),
+    .debug_R1(debug_R1),
+    .debug_R2(debug_R2),
+    .debug_R3(debug_R3),
+    .debug_R4(debug_R4),
+    .debug_R5(debug_R5),
+    .debug_R6(debug_R6),
+    .debug_R7(debug_R7)
 );
 
 
