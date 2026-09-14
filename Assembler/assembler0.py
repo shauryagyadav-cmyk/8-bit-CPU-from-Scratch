@@ -1,7 +1,13 @@
-with open("program.asm") as file:
+import sys
+
+input_file = sys.argv[1] if len(sys.argv) > 1 else "program.asm"
+
+with open(input_file) as file:
     lines = file.readlines()
 
-with open("output.bin", "w") as outfile:
+output_file = sys.argv[2] if len(sys.argv) > 2 else "output.bin"
+
+with open(output_file, "w") as outfile:
 
     OPCODES = {
 
