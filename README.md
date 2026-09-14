@@ -49,3 +49,6 @@ Python Debugger
 The CPU was first developed and verified using RTL simulation before being synthesized and deployed to a **Sipeed Tang Nano 9K FPGA**.
 
 A UART-based debugging system was then added, allowing the processor's state to be inspected and controlled from a host computer.
+
+## CPU Specifications
+
