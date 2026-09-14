@@ -1,0 +1,581 @@
+import serial
+import time
+
+
+# ============================================================
+# UART CONNECTION
+# ============================================================
+
+SERIAL_PORT = "COM8"
+BAUD_RATE = 115200
+
+ser = serial.Serial(
+    SERIAL_PORT,
+    BAUD_RATE,
+    timeout=1
+)
+
+time.sleep(0.1)
+
+print("Connected to Tang Nano on COM8")
+
+print("================================")
+print("       SimpleCPU Debugger")
+print("================================")
+
+
+# ============================================================
+# OPCODE NAMES
+# ============================================================
+
+opcode_names = {
+    0x0: "ADD",
+    0x1: "SUB",
+    0x2: "AND",
+    0x3: "OR",
+    0x4: "XOR",
+    0x5: "NOT",
+    0x6: "LSL",
+    0x7: "LSR",
+    0x8: "MVI",
+    0x9: "STR",
+    0xA: "LDR",
+    0xB: "JMP",
+    0xC: "CMP",
+    0xD: "BEQ",
+    0xE: "HLT",
+    0xF: "BNE"
+}
+
+
+state_names = {
+    0: "FETCH",
+    1: "DECODE",
+    2: "READ",
+    3: "EXECUTE",
+    4: "WRITEBACK"
+}
+
+
+# ============================================================
+# UART HELPER
+# ============================================================
+
+def send_command(command, response_length):
+    """
+    Send one command to the FPGA and receive its response.
+    """
+
+    ser.reset_input_buffer()
+
+    ser.write(bytes([command]))
+
+    response = ser.read(response_length)
+
+    return response
+
+
+# ============================================================
+# CPU CONTROL
+# ============================================================
+
+def cpu_run():
+
+    response = send_command(0x01, 1)
+
+    print(f"Received: {response!r}")
+
+    if response == bytes([0x81]):
+        print("CPU running!")
+        return True
+
+    print("No valid response from FPGA")
+    return False
+
+
+def cpu_pause():
+
+    response = send_command(0x02, 1)
+
+    print(f"Received: {response!r}")
+
+    if response == bytes([0x82]):
+        print("CPU paused!")
+        return True
+
+    print("No valid response from FPGA")
+    return False
+
+
+def cpu_clock():
+
+    response = send_command(0x03, 1)
+
+    print(f"Received: {response!r}")
+
+    if response == bytes([0x83]):
+        print("Clock stepped!")
+        return True
+
+    print("No valid response from FPGA")
+    return False
+
+
+def cpu_step():
+
+    response = send_command(0x04, 1)
+
+    print(f"Received: {response!r}")
+
+    if response == bytes([0x84]):
+        print("Instruction stepped!")
+        return True
+
+    print("No valid response from FPGA")
+    return False
+
+
+# ============================================================
+# READ PC
+# ============================================================
+
+def read_pc():
+
+    response = send_command(0x10, 2)
+
+    print(f"Received: {response!r}")
+
+    if len(response) != 2:
+        print("No valid response from FPGA")
+        return None
+
+    if response[0] != 0x90:
+        print(
+            f"Invalid PC response header: "
+            f"0x{response[0]:02X}"
+        )
+        return None
+
+    pc = response[1] & 0x3F
+
+    print(f"PC = 0x{pc:02X}")
+
+    return pc
+
+
+# ============================================================
+# READ INSTRUCTION
+# ============================================================
+
+def read_instruction():
+
+    response = send_command(0x11, 3)
+
+    if len(response) != 3:
+        print("No valid response from FPGA")
+        return None
+
+    if response[0] != 0x91:
+        print(
+            f"Invalid instruction response header: "
+            f"0x{response[0]:02X}"
+        )
+        return None
+
+    instruction = (
+        (response[1] << 8)
+        | response[2]
+    )
+
+    return instruction
+
+
+# ============================================================
+# READ REGISTER
+# ============================================================
+
+def read_register(reg):
+
+    if reg < 0 or reg > 7:
+        print("Invalid Register")
+        return None
+
+    command = 0x20 + reg
+
+    response = send_command(command, 2)
+
+    print(f"Received: {response!r}")
+
+    if len(response) != 2:
+        print("No valid response from FPGA")
+        return None
+
+    expected_header = 0xA0 + reg
+
+    if response[0] != expected_header:
+        print(
+            f"Invalid register response header: "
+            f"0x{response[0]:02X}"
+        )
+        return None
+
+    value = response[1]
+
+    print(f"R{reg} = 0x{value:02X}")
+
+    return value
+
+
+# ============================================================
+# READ FSM STATE
+# ============================================================
+
+def read_fsmstate():
+
+    response = send_command(0x12, 2)
+
+    print(f"Received: {response!r}")
+
+    if len(response) != 2:
+        print("No valid response from FPGA")
+        return None
+
+    if response[0] != 0x92:
+        print(
+            f"Invalid FSM state response header: "
+            f"0x{response[0]:02X}"
+        )
+        return None
+
+    state = response[1] & 0x07
+
+    if state in state_names:
+        print(f"FSM State = {state_names[state]}")
+    else:
+        print(f"FSM State = UNKNOWN ({state})")
+
+    return state
+
+
+# ============================================================
+# DECODE INSTRUCTION
+# ============================================================
+
+def decode_instruction(instruction):
+
+    opcode = (instruction >> 12) & 0xF
+
+    def reg_name(value):
+        return f"R{value & 0x7}"
+
+    if opcode not in opcode_names:
+        print("Instruction = UNKNOWN")
+        return "UNKNOWN"
+
+    mnemonic = opcode_names[opcode]
+
+    # ADD / SUB / AND / OR / XOR
+    if opcode in (0x0, 0x1, 0x2, 0x3, 0x4):
+
+        rd  = (instruction >> 9) & 0x7
+        rs1 = (instruction >> 6) & 0x7
+        rs2 = (instruction >> 3) & 0x7
+
+        decoded = f"{mnemonic} {reg_name(rd)}, {reg_name(rs1)}, {reg_name(rs2)}"
+
+    # NOT / LSL / LSR
+    elif opcode in (0x5, 0x6, 0x7):
+
+        rd  = (instruction >> 9) & 0x7
+        rs1 = (instruction >> 6) & 0x7
+
+        decoded = f"{mnemonic} {reg_name(rd)}, {reg_name(rs1)}"
+
+    # MVI
+    elif opcode == 0x8:
+
+        rd = (instruction >> 9) & 0x7
+        immediate = (instruction >> 1) & 0xFF
+
+        decoded = f"{mnemonic} {reg_name(rd)}, {immediate}"
+
+    # STR / LDR
+    elif opcode in (0x9, 0xA):
+
+        rd = (instruction >> 9) & 0x7
+        mem = (instruction >> 6) & 0x7
+
+        decoded = f"{mnemonic} {reg_name(rd)}, {reg_name(mem)}"
+
+    # JMP / BEQ / BNE
+    elif opcode in (0xB, 0xD, 0xF):
+
+        address = (instruction >> 6) & 0x3F
+
+        decoded = f"{mnemonic} {address}"
+
+    # CMP
+    elif opcode == 0xC:
+
+        rs1 = (instruction >> 9) & 0x7
+        rs2 = (instruction >> 6) & 0x7
+
+        decoded = f"{mnemonic} {reg_name(rs1)}, {reg_name(rs2)}"
+
+    # HLT
+    elif opcode == 0xE:
+
+        decoded = "HLT"
+
+    else:
+
+        decoded = "UNKNOWN"
+
+    print(f"Instruction = {decoded}")
+
+    return decoded
+
+def cpu_info():
+
+    print("================================")
+    print("          CPU SNAPSHOT")
+    print("================================")
+
+    pc = read_pc()
+
+    instruction = read_instruction()
+
+    state = read_fsmstate()
+
+    print()
+
+    if instruction is not None:
+        decode_instruction(instruction)
+
+    print()
+
+    print("Registers:")
+
+    for reg in range(8):
+        read_register(reg)
+
+    print("================================")
+
+
+# ============================================================
+# CLEAN SHUTDOWN
+# ============================================================
+
+def close_connection():
+
+    if ser.is_open:
+        ser.close()
+
+
+# ============================================================
+# MAIN DEBUGGER
+# ============================================================
+
+running = False
+
+
+while True:
+
+    try:
+
+        command = input("> ").strip()
+
+        if not command:
+            print("Please enter a command")
+            continue
+
+        parts = command.split()
+
+        command_name = parts[0].lower()
+
+
+        # ====================================================
+        # QUIT
+        # ====================================================
+
+        if command_name == "quit":
+
+            print("Goodbye!")
+
+            close_connection()
+
+            break
+
+
+        # ====================================================
+        # HELP
+        # ====================================================
+
+        elif command_name == "help":
+
+            print("Commands:")
+            print("  help")
+            print("  run")
+            print("  pause")
+            print("  pc")
+            print("  reg <0-7>")
+            print("  instruction")
+            print("  decode")
+            print("  state")
+            print("  fsmstate")
+            print("  step")
+            print("  clock")
+            print("  info")
+            print("  quit")
+
+
+        # ====================================================
+        # RUN
+        # ====================================================
+
+        elif command_name == "run":
+
+            if cpu_run():
+                running = True
+
+
+        # ====================================================
+        # PAUSE
+        # ====================================================
+
+        elif command_name == "pause":
+
+            if cpu_pause():
+                running = False
+
+
+        # ====================================================
+        # PC
+        # ====================================================
+
+        elif command_name == "pc":
+
+            read_pc()
+
+
+        # ====================================================
+        # REGISTER
+        # ====================================================
+
+        elif command_name == "reg":
+
+            if len(parts) != 2:
+                print("Usage: reg <0-7>")
+                continue
+
+            try:
+                reg = int(parts[1])
+            except ValueError:
+                print("Register must be an integer")
+                continue
+
+            read_register(reg)
+
+
+        # ====================================================
+        # INSTRUCTION
+        # ====================================================
+
+        elif command_name == "instruction":
+
+            instruction = read_instruction()
+
+            if instruction is not None:
+                decode_instruction(instruction)
+
+
+        # ====================================================
+        # DECODE
+        # ====================================================
+
+        elif command_name == "decode":
+            instruction = read_instruction()
+
+            if instruction is not None:
+                decode_instruction(instruction)
+
+
+        # ====================================================
+        # STATE
+        # ====================================================
+
+        elif command_name == "state":
+
+            if running:
+                print("Running")
+            else:
+                print("Paused")
+
+
+        # ====================================================
+        # FSM STATE
+        # ====================================================
+
+        elif command_name == "fsmstate":
+
+            read_fsmstate()
+
+
+        # ====================================================
+        # INSTRUCTION STEP
+        # ====================================================
+
+        elif command_name == "step":
+
+            if running:
+                print(
+                    "You don't step while "
+                    "the CPU is running"
+                )
+            else:
+                cpu_step()
+
+
+        # ====================================================
+        # CLOCK STEP
+        # ====================================================
+
+        elif command_name == "clock":
+
+            if running:
+                print(
+                    "Can't step while "
+                    "the CPU is running"
+                )
+            else:
+                cpu_clock()
+
+        elif command_name == "info":
+            cpu_info()
+
+
+        # ====================================================
+        # UNKNOWN COMMAND
+        # ====================================================
+
+        else:
+
+            print("Unknown command")
+
+
+    except KeyboardInterrupt:
+
+        print("\nGoodbye!")
+
+        close_connection()
+
+        break
+
+
+    except serial.SerialException as e:
+
+        print(f"Serial error: {e}")
+
+        close_connection()
+
+        break
