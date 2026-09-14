@@ -45,6 +45,6 @@ Tang Nano 9K FPGA
        ▼
 Python Debugger
 
-'''markdown
-
-The CPU was first developed and verified using RTL simulation before being synthesized and deployed to a **Sipeed Tang Nano 9K FPGA**.  
+```markdown
+The CPU was first developed and verified using RTL simulation before being synthesized and deployed to a **Sipeed Tang Nano 9K FPGA**.
+ 
