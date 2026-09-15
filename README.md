@@ -110,6 +110,6 @@ Additionally, FPGA implementation includes:
 This CPU has a custom 16-instruction ISA.
 
 |Opcode|Instruction|Description|
-| :--- | :--- | ;--- |
+| :--- | :--- | 
 
 
