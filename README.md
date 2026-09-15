@@ -202,3 +202,30 @@ The waveform below shows the processor executing a complete program while progre
 The final register state after execution provides a high-level verification of the expected program behavior.
 
 ![CPU Execution](docs/final_registers.png) 
+
+## UART Debug System
+
+One of the final stages of the project was adding a hardware debugging interface to the CPU.
+
+The FPGA contains a UART communication system that connects the CPU to a Python debugger running on the host computer.
+
+                 Host Computer
+                       │
+                       │ UART
+                       ▼
+              ┌─────────────────┐
+              │   UART RX / TX  │
+              └────────┬────────┘
+                       │
+                       ▼
+              ┌─────────────────┐
+              │ Debug Protocol  │
+              └────────┬────────┘
+                       │
+                       ▼
+              ┌─────────────────┐
+              │ Debug Controller│
+              └────────┬────────┘
+                       │
+                       ▼
+                  SimpleCPU
