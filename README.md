@@ -259,7 +259,7 @@ A GUI version of the debugger is also included.
 
 ## Repository structure
 
-
+```
 SimpleCPU/
 │
 ├── Assembler/
@@ -319,4 +319,6 @@ SimpleCPU/
 ├── SimpleCPU_fpga.gprj
 ├── .gitignore
 └── README.md
+
+```
 
