@@ -107,9 +107,27 @@ Additionally, FPGA implementation includes:
   
 ## Instruction Set Architecture
 
-This CPU has a custom 16-instruction ISA.
+This CPU includes a custom **16-instruction ISA**.
 
-|Opcode|Instruction|Description|
-| :--- | :--- | 
+| Opcode | Instruction | Description |
+| :--- | :--- | :--- |
+| `0000` | ADD | Add two registers |
+| `0001` | SUB | Subtract two registers |
+| `0010` | AND | Bitwise AND |
+| `0011` | OR  | Bitwise OR |
+| `0100` | XOR | Bitwise XOR |
+| `0101` | NOT | Bitwise NOT |
+| `0110` | LSL | Logical shift left |
+| `0111` | LSR | Logical shift right |
+| `1000` | MVI | Move immediate |
+| `1001` | STR | Store register to memory |
+| `1010` | LDR | Load register from memory |
+| `1011` | JMP | Unconditional jump |
+| `1100` | CMP | Compare two registers |
+| `1101` | BEQ | Branch if equal |
+| `1110` | HLT | Halt processor |
+| `1111` | BNE | Branch if not equal |
+
+
 
 
