@@ -197,5 +197,8 @@ The waveform below shows the processor executing a complete program while progre
 
 ![CPU Execution](docs/execution_overview.png)
 
+## Final Register State 
 
- 
+The final register state after execution provides a high-level verification of the expected program behavior.
+
+![CPU Execution](docs/final_registers.png) 
