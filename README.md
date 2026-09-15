@@ -70,3 +70,11 @@ A UART-based debugging system was then added, allowing the processor's state to 
 | FPGA Clock | 27 MHz |
 | UART Baud Rate | 115200 |
 
+## CPU Architecture
+
+The processor uses a **multi-cycle architecture** controlled by a finite state machine.
+
+Each instruction progresses through five major states:
+
+
+
