@@ -52,3 +52,21 @@ A UART-based debugging system was then added, allowing the processor's state to 
 
 ## CPU Specifications
 
+
+| Component | Specification |
+| :--- | :--- |
+| Datapath Width | 8-bit |
+| Instruction Width | 16-bit |
+| Program Counter | 6-bit |
+| Instruction Memory | 64 × 16-bit |
+| Data Memory | 256 × 8-bit |
+| Registers | 8 × 8-bit |
+| ALU | 8-bit |
+| Architecture | Multi-cycle |
+| Control | Finite State Machine |
+| Execution States | Fetch → Decode → Read → Execute → Writeback |
+| ISA | 16 instructions |
+| FPGA | Sipeed Tang Nano 9K |
+| FPGA Clock | 27 MHz |
+| UART Baud Rate | 115200 |
+
