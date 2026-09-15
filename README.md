@@ -158,6 +158,44 @@ The generated machine code can be loaded into the CPU's instruction memory.
 ## Running the Assembler
 
 ```Bash
-       python Assembler/assembler0.py
+python Assembler/assembler0.py
 
 ```
+## Verification
+
+The CPU was rigorously tested and verified using:
+
+- Icarus Verilog
+- GTKWave
+- Dedicated Verilog testbenches
+- Full assembly programs
+
+Testing covered:
+
+- Arithmetic operations
+- Logical operations
+- Shift operations
+- Immediate instructions
+- Register reads and writes
+- Memory loads
+- Memory stores
+- Comparisons
+- Zero flag behaviour
+- Conditional branches
+- Unconditional jumps
+- HALT behavior
+- Program counter operation
+- Multi-Cycle control sequencing
+- Complete assembly programs
+
+The Processor was first tested in simulation in the above mentioned ways before being moved on a physical FPGA hardware.
+
+## CPU Execution
+
+The waveform below shows the processor executing a complete program while progressing through its multi-cycle control states.
+
+
+![CPU Execution](docs/execution_overview.png)
+
+
+ 
