@@ -229,3 +229,31 @@ The FPGA contains a UART communication system that connects the CPU to a Python 
                        │
                        ▼
                   SimpleCPU
+
+The debug interface provides access to processor state and allows the CPU to be controlled while running on the FPGA.
+
+Supported functionality includes:
+
+- Run
+- Pause
+- Clock stepping
+- Instruction Stepping
+- Program Counter inspection
+- Current instruction inspection
+- FSM state inspection
+- Register inspection
+
+## Python Debugger
+
+A host-side python debugger was developed with AI-assistance to communicate with the CPU over UART.
+
+The debugger includes:
+
+```
+  debugger/
+  |--- cpu.py
+  |--- main.py
+  |--- gui.py
+```
+A GUI version of the debugger is also included.
+
