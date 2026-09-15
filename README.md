@@ -144,12 +144,17 @@ The project includes a custom Python assembler capable of converting assembly pr
 
 Example:
 
-START:
-    MVI R0 10
-    MVI R1 20
-    ADD R2 R0 R1
-    CMP R2 R1
-    BNE START
+```asm
+ START:
+       MVI R0 10
+       MVI R1 20
+       MVI R2 0
+       ADD R2 R0 R1
+       CMP R2 R1
+       BNE START
+```
+
+
 
 
 
