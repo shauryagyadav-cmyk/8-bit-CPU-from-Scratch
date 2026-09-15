@@ -76,7 +76,7 @@ The processor uses a **multi-cycle architecture** controlled by a finite state m
 
 Each instruction progresses through five major states:
 
-![CPU architecture](docs/CPU_architecture.jpg)
+![CPU architecture](docs/CPU_arch.jpg)
 
 
 
