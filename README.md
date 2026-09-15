@@ -78,5 +78,35 @@ Each instruction progresses through five major states:
 
 ![CPU architecture](docs/CPU_arch.jpg)
 
+## Main Components
+
+- Program Counter
+- Instruction Memory
+- Instruction Register
+- Instruction Decoder
+- Register file
+- Immediate block
+- ALU
+- Zero Flag Register
+- Data Memory
+- Multiplexer
+- Writeback MUX
+- Multi-Cycle Control Unit
+
+Additionally, FPGA implementation includes:
+
+- UART Receiver
+- UART transmitter
+- UART Debug Protocol
+- Debug Controller
+- Debug Interface
+- Debug System
+- Button Pulse Generator
+- FPGA Top-Level Logic
+
+  
+## Instruction Set Architecture
+
+This CPU has a custom 16-instruction ISA.
 
 
