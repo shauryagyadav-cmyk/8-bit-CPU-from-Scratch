@@ -128,6 +128,20 @@ This CPU includes a custom **16-instruction ISA**.
 | `1110` | HLT | Halt processor |
 | `1111` | BNE | Branch if not equal |
 
+## Assembler
+
+The project includes a custom Python assembler capable of converting assembly programs into the CPU's 16-bit machine code.
+
+## Supported Features
+
+- All 16 CPU instructions
+- Register Parsing
+- Immediate Values
+- Labels
+- Comments
+- Instruction encoding
+- Binary machine-code generation
+
 
 
 
