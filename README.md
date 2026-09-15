@@ -257,3 +257,66 @@ The debugger includes:
 ```
 A GUI version of the debugger is also included.
 
+## Repository structure
+
+
+SimpleCPU/
+│
+├── Assembler/
+│   ├── assembler0.py
+│   ├── program.asm
+│   ├── output.bin
+│   └── bug_fix.bin
+│
+├── src/
+│   ├── CPU.v
+│   ├── alu.v
+│   ├── control_unit.v
+│   ├── regfile.v
+│   ├── program_counter.v
+│   ├── instruction_memory.v
+│   ├── instruction_register.v
+│   ├── decoder.v
+│   ├── instruction_decoder.v
+│   ├── immediate_block.v
+│   ├── Data_memory.v
+│   ├── flag_register.v
+│   ├── writeback_mux.v
+│   ├── multiplexer.v
+│   ├── mux67.v
+│   │
+│   ├── fpga_top.v
+│   ├── fpga.cst
+│   ├── fpga.sdc
+│   │
+│   ├── uart_rx.v
+│   ├── uart_tx.v
+│   ├── uart_debug_protocol.v
+│   ├── baud_generator.v
+│   ├── cpu_uart_debug.v
+│   ├── debug_controller.v
+│   ├── debug_interface.v
+│   ├── debug_system.v
+│   └── ...
+│
+├── debugger/
+│   ├── cpu.py
+│   ├── main.py
+│   ├── gui.py
+│   └── serial_test.py
+│
+├── tb/
+│   └── ...
+│
+├── waves/
+│   └── ...
+│
+├── docs/
+│   ├── CPU_overview.jpg
+│   ├── execution_overview.png
+│   └── final_registers.png
+│
+├── SimpleCPU_fpga.gprj
+├── .gitignore
+└── README.md
+
