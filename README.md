@@ -322,3 +322,9 @@ SimpleCPU/
 
 ```
 
+## Development Timeline
+
+The project evolved incrementally from individual digital components into a complete FPGA-based processor.
+
+
+
