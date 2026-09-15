@@ -153,9 +153,11 @@ Example:
        CMP R2 R1
        BNE START
 ```
+The generated machine code can be loaded into the CPU's instruction memory.
 
+## Running the Assembler
 
+```Bash
+       python Assembler/assembler0.py
 
-
-
-
+```
