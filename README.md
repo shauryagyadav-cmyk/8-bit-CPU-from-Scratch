@@ -413,6 +413,8 @@ Stage 20 - Host Debugger
 
 - Developed Python command-line and GUI debugging tools
 
+![CPU debugger](docs/cpu_debug.png) 
+
 Stage 21 - Project Completion
 
 - Completed the CPU, assembler, FPGA implementation, UART debug system and host-side debugger
