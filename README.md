@@ -326,5 +326,120 @@ SimpleCPU/
 
 The project evolved incrementally from individual digital components into a complete FPGA-based processor.
 
+Stage 1 - Verilog Fundamentals
+
+- Learned Verilog fundamentals
+- Built basic combinational
+
+Stage 2 - ALU
+
+- Designed the 8-bit ALU
+- Implemented  arithmetic and logical operations
+
+Stage 3 - Registers
+
+- Built individual register modules
+
+Stage 4 - Register File
+
+- Designed the 8-register register file
+
+Stage 5 - Program Counter
+
+- Designed the 6-bit Program Counter
+
+Stage 6 - Instruction Memory
+
+- Added Instruction storage
+
+Stage 7 - Instruction Register 
+
+- Added Instruction capture
+
+Stage 8 - Decoder
+
+- Designed instruction decoding logic
+
+Stage 9 - Control Unit
+
+- Designed multi-cycle FSM
+
+Stage 10 - CPU Integration
+
+- Integrated the complete datapath
+
+Stage 11 - Compare and Flags
+
+- Added CMP
+- Added zero flag register
+
+Stage 12 - Branching
+
+- Implemented BEQ
+- Implemented BNE
+- Implemented JMP
+
+Stage 13 - HALT
+
+- Added processor halt behaviour
+
+Stage 14 - Assembler 
+
+- Developed a custom Python assembler
+
+Stage 15 - Labels
+
+- Added label support
+
+Stage 16 - Full ISA Verification
+
+- Verified all the instructions implemented in the CPU using assembly programs and RTL simulation
+
+Stage 17 - FPGA Implementation
+
+- Synthesized the processor for the tang nano 9k
+- Successfully flashed the CPU program to the physical hardware
+
+Stage 18 - UART 
+
+- Added UART RX/TX communication
+
+Stage 19 - Hardware Debugging 
+
+- Implemented the hardware debug protocol
+- Added CPU control and state inspection
+
+Stage 20 - Host Debugger
+
+- Developed Python command-line and GUI debugging tools
+
+Stage 21 - Project Completion
+
+- Completed the CPU, assembler, FPGA implementation, UART debug system and host-side debugger
+- Archived the project as a finished implementation
+
+## Tools Used
+
+- Verilog HDL
+- Python
+- Icarus Verilog
+- GTKWave
+- Gowin EDA
+- Sipeed Tang Nano 9k
+- VS Code
+- Git
+- Github
+
+
+This project grew from individual Verilog modules into a complete system capable of:
+
+Executing custom machine code → running on real FPGA hardware → communicating over UART → being controlled and inspected from a computer.
+
+## Author 
+
+*Shaurya Yadav*
+
+Built from scratch as a personal computer architecture and digital hardware project.
+
 
 
