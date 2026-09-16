@@ -400,7 +400,7 @@ Stage 17 - FPGA Implementation
 - Synthesized the processor for the tang nano 9k
 - Successfully flashed the CPU program to the physical hardware
 
-![FPGA Implementation](docs/fpga.png)
+![FPGA Implementation](docs/fpga.jpg)
 
 Stage 18 - UART 
 
