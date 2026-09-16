@@ -214,17 +214,17 @@ The FPGA contains a UART communication system that connects the CPU to a Python 
                        │ UART
                        ▼
               ┌─────────────────┐
-              │   UART RX / TX     │
+              │   UART RX / TX  │
               └────────┬────────┘
                        │
                        ▼
               ┌─────────────────┐
-              │ Debug Protocol     │
+              │ Debug Protocol  │
               └────────┬────────┘
                        │
                        ▼
               ┌─────────────────┐
-              │ Debug Controller   │
+              │ Debug Controller│
               └────────┬────────┘
                        │
                        ▼
